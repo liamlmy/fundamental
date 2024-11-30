@@ -58,7 +58,23 @@
 //leetcode submit region begin(Prohibit modification and deletion)
 class Solution {
     public String convert(String s, int numRows) {
-        
+        // corner case
+        if (numRows == 1 || numRows >= s.length()) {
+            return s;
+        }
+        //
+        char[] ret = new char[s.length()];
+        int t = numRows * 2 - 2;
+        int idx = 0;
+        for (int i = 0; i < numRows; i++) {
+            for (int j = 0; j < s.length() - i; j += t) {
+                ret[idx++] = s.charAt(i + j);
+                if (i > 0 && i < numRows - 1 && j + t - i < s.length()) {
+                    ret[idx++] = s.charAt(j + t - i);
+                }
+            }
+        }
+        return new String(ret);
     }
 }
 //leetcode submit region end(Prohibit modification and deletion)
