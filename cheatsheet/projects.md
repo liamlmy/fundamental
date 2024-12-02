@@ -30,6 +30,15 @@ $y(x)=w_0+\sum{w_ix_i}+\sum\sum{ \langle v_{i,f_j}, v_{j,f_i} \rangle x_i x_j}$\
 ### auc多高算高
 #### 
 
+## 如何提升模型的泛化能力
+### dropout
+### L1和L2正则项
+$L1=min[\sum(w_T x_i - y_i)^2+\lambda ||w||_1]$，促使模型学到的权重尽可能稀疏，自动做特征筛选，排除不重要的特征\
+$L2=min[\sum(w^T x_i - y_i)^2+\lambda ||w||_2]$，促使模型学到的权重尽可能小，降低模型复杂度，缓解特征共线性，避免过拟合
+### early stop
+### batchnorm vs layernorm
+### resnet
+
 # 序列模型
 
 # 多目标模型
