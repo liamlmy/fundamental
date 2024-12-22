@@ -105,10 +105,29 @@ $y(x)=w_0+\sum{w_ix_i}+\sum\sum{ \langle v_{i,f_j}, v_{j,f_i} \rangle x_i x_j}$\
   * dump出的h5文件大小
 * 激活函数
   * sigmoid
+    * $\frac{1}{1+e^{-x}}$，S型，0.5中心，范围[0, 1]
+    * $f'(x)=f(x)(1-f(x))$
+    * 计算exp时耗时较多，不是关于原点对称，会出现梯度弥散
   * tanh
+    * $\frac{1-e^{-2x}}{1+e^{-2x}}$，S型，0中心，范围[-1, 1]
+    * $f'(x)=1-\tanh^2{x}$
+    * 比sigmoid计算速度快，但也有梯度弥散问题
   * relu
+    * $\max{(x, 0)}$
+    * 收敛速度快，解决了部分梯度弥散的问题
+    * 在负数部分神经元死亡，leaky relu可以解决该问题
+  * leaky relu
+    * $\begin{cases}x, \quad x>=0 \\ \alpha x,\quad x<0,a\approx0.01 \end{cases}$
+    * 具有relu的所有优点，且不存在神经元死亡的问题
+  * softmax
+    * 
   * maxout
+    * $$
+    * 对relu和leaky relu的一般归纳
+    * 计算量相对复杂
   * swish
+    * $x*sigmoid(\alpha x)$
+    * 非单调，处处可导
   * gelu
   * dice
 * 优化器
