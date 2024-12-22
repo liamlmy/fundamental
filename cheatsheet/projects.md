@@ -28,7 +28,100 @@ $y(x)=w_0+\sum{w_ix_i}+\sum\sum{ \langle v_{i,f_j}, v_{j,f_i} \rangle x_i x_j}$\
 ***
 
 # 序列模型
-
+## 策略简介
+### 为什么选用DIN模型？
+用户不同历史兴趣对当前候选店铺的影响程度不同
+### 为什么用RNN模型
+用户的外卖兴趣会随时间发生周期性转移
+### 为什么没有用更复杂的DIEN/BST/SIM等模型
+* 外卖业务的数据不充分
+* 线上inference的性能不支持，RT过高
+### 序列特征
+* 时间维度
+  * 长期/短期
+* 行为维度
+  * 正向反馈：点击、搜索、下单
+  * 负向反馈：差评
+* side info
+  * shop_id
+  * cate/tag/month sold/...基础属性&静态画像
+  * 时段、场景信息
+  * 距离当前请求的时间间隔+log变换
+### mini-batch自适应正则化
+* 只更新当前批次中非0输入的权重，同时权重按照输入中非0的数量做归一化处理
+* 降低过拟合风险
+### dice激活函数
+* 按照输入进行分布偏移，同时保证拐点可导
+### gauc计算指标
+* 用户维度auc
+* 当用户行为不多时，gauc会发生抖动，还是以auc为准
+## 衡量指标
+### auc与cvr不一致
+* 工程问题：特征一致性 / 样本穿越
+* 指标问题：gauc / uauc，auc只能说明模型可以拉大正负样本的区别，但对实际的排序或者用户的浏览体验不一定有效果
+* 数据发生偏移，模型的泛化能力较弱
+* 划分数据：用户群体、时段、场景等维度
+## follow up
+### DIEN
+* GRU + attention
+* GRU推导公式
+  * $h_t=(1-z_t)*h_{t-1}+z_t*\tilde{h_t}$
+  * $z_t=\sigma{(W_z\cdot{[h_{t-1}, x_t]})}$
+  * $\tilde{h_t}=\tanh(W\cdot[r_t*h_{t-1},x_t])$
+  * $r_t=\sigma{(W_r\cdot{[h_{t-1},x_t]})}$
+### DISN
+* 双向LSTM + attention
+* LSTM推导公式
+  * $y_t=W_{yh}h_t+b_y$
+  * $h_t=o_t\odot{m_t}$
+  * $o_t=\sigma{(W_{xo}x_t+W_{ho}h_{t-1}+b_o)}$
+  * $m_t=\tanh{(c_t)}$
+  * $c_t=c_{t-1}\odot{f_t}+g_t\odot{i_t}$
+  * $f_t=\sigma{(W_{xf}x_t+W_{hf}h_{t-1}+b_f)}$
+  * $g_t=\tanh{(W_{xg}x_t+W_{hg}h_{t-1}+b_g)}$
+  * $i_t=\sigma{(W_{xi}x_i+W_{hi}h_{t-1}+b_i)}$
+### BST
+* Transformer Encoder，target itemt和history item拼接到一起训练
+### SIM
+* 向量hard search / soft search取topk个做序列再过attention或transformer
+### ETA
+### MIND
+* 能够获取用户多个不同的兴趣，从而丰富召回
+* Multi-Interest Extractor Layer：通过多层胶囊网络提取
+* B2I动态路由：$b_{ij}$高斯初始化；多个胶囊网络共享S双线映射矩阵；不同用户的兴趣胶囊数量不同
+## 常见问题
+### 为什么不用fancy模型
+* 算法选型要结合业务，并不是fancy模型就一定合适
+* 外卖业务不同于信息流推荐，数据体量不至于使用SIM等超长序列模型
+* 工程几件成本问题
+### 训练方式
+* 90天全量训练：兴旺模型忘掉一些历史数据
+  * 平台希望通过低价吸引用户
+  * 对于长期不访问的用户再来的时候按照新用户发券
+* 模型大小
+  * feature_field
+  * feature_slot
+  * 参数量
+  * dump出的h5文件大小
+* 激活函数
+  * sigmoid
+  * tanh
+  * relu
+  * maxout
+  * swish
+  * gelu
+  * dice
+* 优化器
+  * SGD
+  * BGD
+  * MBGD
+  * Momentum
+  * Adagard
+  * RMSprop
+  * Adam
+  * ftrl
+* loss函数
+  * 
 ***
 
 # 多目标模型
