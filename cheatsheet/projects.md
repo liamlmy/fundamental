@@ -1,4 +1,5 @@
-# 模型特征
+# 交叉特征模型
+## 常见模型
 ### LR模型
 $y(x)=w_0+\sum{w_ix_i}$
 ### FM模型
@@ -346,14 +347,14 @@ $L2=min[\sum(w^T x_i - y_i)^2+\lambda ||w||_2]$，促使模型学到的权重尽
 #### droprank
 
 # 什么是好的特征工程
-## 高质量特征
-### 有区分性 informative
-### 特征之间相互独立 independent
-### 简单易于理解 simple
-## 伸缩性 scalable：支持大数据量、高基数特征
-## 高效率 efficient：支持高并发预测、低纬度
-## 灵活性 flexible：对下游任务有一定的普适性
-## 自适应性 adaptive：对数据分布的变化有一定的鲁棒性
+* 高质量特征
+  * 有区分性 informative
+  * 特征之间相互独立 independent
+  * 简单易于理解 simple
+* 伸缩性 scalable：支持大数据量、高基数特征
+* 高效率 efficient：支持高并发预测、低纬度
+* 灵活性 flexible：对下游任务有一定的普适性
+* 自适应性 adaptive：对数据分布的变化有一定的鲁棒性
 
 # 常用的特征变换
 ## 数值型
